@@ -1,6 +1,7 @@
 package com.example.benjamin.postup;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.graphics.Typeface;
 import android.widget.Button;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     EditText searchItem;
     Button searchButton;
     Heroku heroku;
+    ProgressBar progressBar;
 
     public void mlOutputAlert(String polarity, double accuracy){
         AlertDialog.Builder output = new AlertDialog.Builder(MainActivity.this);
@@ -42,9 +45,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
         Typeface font = Typeface.createFromAsset(getAssets(), "lato_regular.ttf"); //set font to something nicer
         TextView message = (TextView) dialog.getWindow().findViewById(android.R.id.message);
-        TextView t = (TextView) dialog.getWindow().findViewById(android.R.id.title);
         message.setTypeface(font);
-        t.setTypeface(font);
     }
 
     public void sendNetworkRequest(Post post) {
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<Post>() {
             @Override
             public void onResponse(Call<Post> call, Response<Post> response) {
+                progressBar.setVisibility(View.GONE);
                 mlOutputAlert(response.body().getPolarity(), response.body().getAcc());
                 Toast.makeText(getBaseContext(), "connection successful", Toast.LENGTH_SHORT).show();
             }
@@ -81,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
         Typeface font = Typeface.createFromAsset(getAssets(), "lato_regular.ttf"); //set font to something nicer
 		title.setTypeface(font);
 
+        progressBar = (ProgressBar) findViewById(R.id.progress);
+        progressBar.setVisibility(View.GONE);
+        progressBar.getIndeterminateDrawable().setColorFilter(Color.WHITE, android.graphics.PorterDuff.Mode.MULTIPLY);
+
         searchItem = (EditText) findViewById(R.id.search_item);
 		searchItem.setTypeface(font);
 
@@ -90,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
 		searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progressBar.setVisibility(View.VISIBLE);
                 Post post = new Post (searchItem.getText().toString());
                 sendNetworkRequest(post);
             }
@@ -98,7 +105,8 @@ public class MainActivity extends AppCompatActivity {
 		searchItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                searchItem.setText("");
+                if (searchItem.getText().toString().equals("Type a phrase to be analyzed"))
+                    searchItem.setText("");
             }
         });
 

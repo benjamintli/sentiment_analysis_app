@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Sentiment Analyzer</string>
     <string name="title">Sentiment Analyzer</string>
+    <string name="pre">Type a phrase to be analyzed</string>
+    <string name="search">Search</string>
 </resources>

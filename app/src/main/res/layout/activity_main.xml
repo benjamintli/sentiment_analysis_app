@@ -29,21 +29,33 @@
             android:layout_height="50dp"
             android:background="@drawable/round"
             android:textColor="@color/grey"
-            android:text="Type a phrase to be analyzed"
+            android:text="@string/pre"
             android:layout_weight="4"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             android:layout_marginBottom="10dp"
             android:id="@+id/search_item"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="Search"
-            android:layout_weight="0"
-            android:background="@drawable/transparent"
-            android:textColor="@color/white"
-            android:id="@+id/search_button"
-            android:textSize="18sp"/>
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <Button
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@string/search"
+                android:background="@drawable/transparent"
+                android:textColor="@color/white"
+                android:id="@+id/search_button"
+                android:textSize="18sp"/>
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:layout_alignEnd="@id/search_button"
+                android:layout_marginEnd="5dp"
+                android:id="@+id/progress" />
+
+        </RelativeLayout>
+
     </TableLayout>
 
 
