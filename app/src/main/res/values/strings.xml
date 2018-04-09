@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">postup</string>
+    <string name="title">Sentiment Analysis</string>
+</resources>
