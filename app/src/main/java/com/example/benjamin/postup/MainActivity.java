@@ -40,6 +40,11 @@ public class MainActivity extends AppCompatActivity {
                     });
         AlertDialog dialog = output.create();
         dialog.show();
+        Typeface font = Typeface.createFromAsset(getAssets(), "lato_regular.ttf"); //set font to something nicer
+        TextView message = (TextView) dialog.getWindow().findViewById(android.R.id.message);
+        TextView t = (TextView) dialog.getWindow().findViewById(android.R.id.title);
+        message.setTypeface(font);
+        t.setTypeface(font);
     }
 
     public void sendNetworkRequest(Post post) {
@@ -64,8 +69,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     @Override

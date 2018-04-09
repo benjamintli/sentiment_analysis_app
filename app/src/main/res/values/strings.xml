@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">postup</string>
-    <string name="title">Sentiment Analysis</string>
+    <string name="app_name">Sentiment Analyzer</string>
+    <string name="title">Sentiment Analyzer</string>
 </resources>
