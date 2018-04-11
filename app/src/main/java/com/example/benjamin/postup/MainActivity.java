@@ -1,5 +1,6 @@
 package com.example.benjamin.postup;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<Post>() {
             @Override
             public void onResponse(Call<Post> call, Response<Post> response) {
+                searchButton.setText(R.string.search);
                 progressBar.setVisibility(View.GONE);
                 mlOutputAlert(response.body().getPolarity(), response.body().getAcc());
                 Toast.makeText(getBaseContext(), "connection successful", Toast.LENGTH_SHORT).show();
@@ -67,8 +70,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Post> call, Throwable t) {
-                Toast.makeText(getBaseContext(), "connection failed", Toast.LENGTH_SHORT).show();
-
+                searchButton.setText(R.string.search);
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(getBaseContext(), "connection failed, try again", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -96,7 +100,11 @@ public class MainActivity extends AppCompatActivity {
 		searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                searchButton.setText("");
                 progressBar.setVisibility(View.VISIBLE);
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(
+                        searchItem.getWindowToken(), 0);
                 Post post = new Post (searchItem.getText().toString());
                 sendNetworkRequest(post);
             }
