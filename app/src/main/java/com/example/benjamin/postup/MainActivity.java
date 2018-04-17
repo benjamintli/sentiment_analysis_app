@@ -8,16 +8,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.graphics.Typeface;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.gson.annotations.Expose;
+import org.w3c.dom.Text;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     Button searchButton;
     Heroku heroku;
     ProgressBar progressBar;
+    TableLayout output;
 
     public void mlOutputAlert(String polarity, double accuracy){
         AlertDialog.Builder output = new AlertDialog.Builder(MainActivity.this);
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<Post> call, Response<Post> response) {
                 searchButton.setText(R.string.search);
                 progressBar.setVisibility(View.GONE);
-                mlOutputAlert(response.body().getPolarity(), response.body().getAcc());
+                textOutput(response.body().getPolarity(), response.body().getAcc());
                 Toast.makeText(getBaseContext(), "connection successful", Toast.LENGTH_SHORT).show();
             }
 
@@ -77,6 +80,28 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void textOutput (String polarity, double accuracy) {
+        Typeface font = Typeface.createFromAsset(getAssets(), "lato_regular.ttf"); //set font to something nicer
+        String percent = String.format("%.2f", (accuracy * 100));
+        TextView phrase = findViewById(R.id.phrase);
+        TextView pol = findViewById(R.id.polarity);
+        TextView acc = findViewById(R.id.accuracy);
+        phrase.setTypeface(font);
+        pol.setTypeface(font);
+        acc.setTypeface(font);
+
+        phrase.setText("Phrase: " + searchItem.getText().toString());
+        pol.setText("Polarity: " + polarity);
+        acc.setText("Accuracy: " + percent + "%");
+
+        TableLayout output = findViewById(R.id.output);
+        output.setVisibility(View.VISIBLE);
+        AlphaAnimation fadeIn = new AlphaAnimation(0.0f, 1.0f);
+        output.startAnimation(fadeIn);
+        fadeIn.setDuration(500);
+        fadeIn.setFillAfter(true);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
         TextView title = (TextView) findViewById(R.id.title);
         Typeface font = Typeface.createFromAsset(getAssets(), "lato_regular.ttf"); //set font to something nicer
 		title.setTypeface(font);
+        output = findViewById(R.id.output);
+        output.setVisibility(View.GONE);
 
         progressBar = (ProgressBar) findViewById(R.id.progress);
         progressBar.setVisibility(View.GONE);
